@@ -6,7 +6,7 @@ while(my $align=<align>){
 	my @splitalign=split "",$align;	
 	if(@splitalign[0]eq">"){
 		open(salida,">@ARGV[0]/OutPutFiles@ARGV[1]/Equivalences/SalidaSRes@splitalign[1]@splitalign[2]@splitalign[3]@splitalign[4]_@splitalign[6].txt");
-		open(Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@splitalign[1]@splitalign[2]@splitalign[3]@splitalign[4]_@splitalign[6].pdb.done/FrustrationData/@splitalign[1]@splitalign[2]@splitalign[3]@splitalign[4].B99990001.pdb_singleresidue");
+		open(Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@splitalign[1]@splitalign[2]@splitalign[3]@splitalign[4]_@splitalign[6].pdb.done/FrustrationData/@splitalign[1]@splitalign[2]@splitalign[3]@splitalign[4].pdb_singleresidue");
 		my $Sres1=<Sres>;
 			}
 	else{
