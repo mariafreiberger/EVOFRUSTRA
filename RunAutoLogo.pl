@@ -194,18 +194,10 @@ while(my $PDB=<Lista>){
 		else{
 			system ("perl $jobsDir/Script/ChainSeparate.pl @sp[0] @sp[1] $jobsDir $jobID @sp[2] @sp[3]");
 			}
-		system ("cd $jobsDir/OutPutFiles$jobID/Modeller/; perl VerifComp.pl @sp[0].pdb > sal");
-		open(ver,"sal");
-		my $ver=<ver>;
-		chomp $ver;
-		if($ver eq "OK"){
-			copy("$jobsDir/OutPutFiles$jobID/Modeller/@sp[0].pdb","$jobsDir/OutPutFiles$jobID/Modeller/@sp[0].B99990001.pdb");}
-		else{
-			system ("python $jobsDir/OutPutFiles$jobID/Modeller/Completar.py $jobsDir/OutPutFiles$jobID/Modeller/@sp[0] @sp[1]");}
-		copy("$jobsDir/OutPutFiles$jobID/Modeller/@sp[0].B99990001.pdb","/home/maria/bin/Frustratometer/frustratometer2/@sp[0].B99990001.pdb");
+		copy("$jobsDir/OutPutFiles$jobID/Modeller/@sp[0].pdb","/home/maria/bin/Frustratometer/frustratometer2/@sp[0].pdb");
 		system ("cd /home/maria/bin/Frustratometer/frustratometer2; perl RunFrustratometer.pl @sp[0].B99990001.pdb singleresidue");
-		move("/home/maria/bin/Frustratometer/frustratometer2/@sp[0].B99990001.pdb.done","$jobsDir/OutPutFiles$jobID/Modeller/@sp[0]_@sp[1].B99990001.pdb.done");
-		move("/home/maria/bin/Frustratometer/frustratometer2/@sp[0].B99990001.pdb","$jobsDir/OutPut$jobID/PDB/@sp[0].pdb");
+		move("/home/maria/bin/Frustratometer/frustratometer2/@sp[0].pdb.done","$jobsDir/OutPutFiles$jobID/Modeller/@sp[0]_@sp[1].pdb.done");
+		move("/home/maria/bin/Frustratometer/frustratometer2/@sp[0].pdb","$jobsDir/OutPut$jobID/PDB/@sp[0].pdb");
 		#sleep(5);
 		#system ("rm -r /home/maria/bin/Frustratometer/frustratometer2/@sp[0].B99990001.pdb");
 	}	
