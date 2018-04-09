@@ -57,14 +57,14 @@ while(my $alin=<align>){
 		else{
 			$comienzo=@splig[2];
 			}
-		open (SresSal,">@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.B99990001.pdb.done/FrustrationData/$pdb.pdb_singleresidue");
+		open (SresSal,">@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdb.pdb_singleresidue");
 		}
 	else{
 		if($long==0){
 			$long=@splitter;
 			$ta=@splitter;	
 			}
-		open (Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.B99990001.pdb.done/FrustrationData/$pdb.B99990001.pdb_singleresidue");
+		open (Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdb.pdb_singleresidue");
 		my $Sres=<Sres>;
 		print SresSal "$Sres";
 		$Sres=<Sres>;
@@ -139,7 +139,7 @@ while(my $alin=<align>){
 				}
 				$cline++;	
 			}
-		open (SresSal,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.B99990001.pdb.done/FrustrationData/$pdb.pdb_singleresidue");
+		open (SresSal,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdb.pdb_singleresidue");
 		my $indice=1;
 		my $cont=0;
 		$c=0;
