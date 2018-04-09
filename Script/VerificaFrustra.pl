@@ -9,7 +9,7 @@ while(my $lista=<lista>){
 	my @spl= split "_",$lista;
 	my $c=0;
 	if(@splitter[0] eq ">"){
-		open(frustra,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6].B99990001.pdb.done/FrustrationData/@splitter[1]@splitter[2]@splitter[3]@splitter[4].B99990001.pdb_singleresidue");
+		open(frustra,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6].pdb.done/FrustrationData/@splitter[1]@splitter[2]@splitter[3]@splitter[4].B99990001.pdb_singleresidue");
 		while(my $frustra=<frustra>){
 			$c++;
 			if($c>4){
