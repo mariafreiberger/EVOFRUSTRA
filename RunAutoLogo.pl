@@ -202,7 +202,6 @@ while(my $PDB=<Lista>){
 		#system ("rm -r /home/maria/bin/Frustratometer/frustratometer2/@sp[0].B99990001.pdb");
 	}	
 }
-
 close(Lista);
 
 #----Equivalences---
