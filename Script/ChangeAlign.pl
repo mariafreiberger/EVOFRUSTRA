@@ -11,7 +11,7 @@ while(my $line=<corregido>){
 	my @splitter= split "",$line;	
 	if(@splitter[0] eq ">"){
 		print salida "$line";
-		open(Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@splitter[1]@splitter[2]@splitter[3]@splitter[4]@splitter[5]@splitter[6].B99990001.pdb.done/FrustrationData/@splitter[1]@splitter[2]@splitter[3]@splitter[4].pdb_singleresidue");
+		open(Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@splitter[1]@splitter[2]@splitter[3]@splitter[4]@splitter[5]@splitter[6].pdb.done/FrustrationData/@splitter[1]@splitter[2]@splitter[3]@splitter[4].pdb_singleresidue");
 		}
 	else{
 		my $Sres=<Sres>;
