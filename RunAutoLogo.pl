@@ -1,14 +1,54 @@
 use strict;
 use File::Copy;
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError) ;
+use Getopt::Long;
+use Pod::Usage qw(pod2usage);
 
-my $fastafile=$ARGV[1];
-my $jobID=$ARGV[0];
+
+my $fastafile = "";
+my $jobID = "";
+my $missa = "N";	# default value is No, False
+my $help = 0;
+GetOptions ("fasta=s" => \$fastafile,	# string 
+			"jobid=s" => \$jobID,		# string 
+			"missing=s" => \$missa,		# string (in the future change to 0 or 1, boolean)
+			'help' => \$help);	
+
+pod2usage(1) if $help;
+
+
+if ($fastafile eq "") {
+	print STDERR "\nError: must specify a Fasta file\n\n";
+	pod2usage(1);
+	die;
+}
+if ($jobID eq "") {
+	print STDERR "\nError: must specify a JobID name\n\n";
+	pod2usage(1);
+	die;
+}
+
+# my $fastafile=$ARGV[1];
+# my $jobID=$ARGV[0];
 my $jobsDir=qx(pwd);
 chomp $jobsDir;
 
-print "Considers Missing Residues (Y/N): ";
-my $missa = <STDIN>;
-chomp $missa;
+
+my $SCRIPTS_DIR = "/home/franco/parra/evofrustra/evofrustra_mariagit";
+my $PDB_DIR = "/media/disk2/pdb_db/pdb";
+my $FRUSTRATOMETER_DIR = "/home/franco/parra/frustratometer2";
+
+# pdb_seq.txt exists??
+unless (-e "pdb_seq.txt") {
+	print STDERR "\npdb_seq.txt does not exists or is empty\n\n";
+	die;
+}
+
+
+# print "Considers Missing Residues (Y/N): ";
+# my $missa = <STDIN>;
+# chomp $missa;
+
 $missa=uc($missa);
 my $d=1;
 while($d){
@@ -37,13 +77,13 @@ copy("$jobsDir/Script/Logo.R","$jobsDir/OutPutFiles$jobID/Equivalences/Logo.R");
 copy("$jobsDir/Script/VerifComp.pl","$jobsDir/OutPutFiles$jobID/Modeller/VerifComp.pl");
 copy("$jobsDir/Script/get_equivalences_chain.pl","$jobsDir/OutPutFiles$jobID/Modeller/get_equivalences_chain.pl");
 
-open(align, "$jobsDir/$fastafile");
+open(align, "$jobsDir/$fastafile")  or die "Can't open $fastafile $!";
 my $c=0;
 my $n=0;
 
-open(lista,">$jobsDir/OutPutFiles$jobID/Lista.txt");
-open(salidafasta,">$jobsDir/OutPutFiles$jobID/Sequences.fasta");
-open(alin,">$jobsDir/OutPutFiles$jobID/AlignSE.fasta");
+open(lista,">$jobsDir/OutPutFiles$jobID/Lista.txt") or die "Can't open Lista.txt $!";
+open(salidafasta,">$jobsDir/OutPutFiles$jobID/Sequences.fasta") or die "Can't open Sequences.fasta $!";
+open(alin,">$jobsDir/OutPutFiles$jobID/AlignSE.fasta") or die "Can't open AlignSE.fasta $!";
 my $co=0;
 
 while(my $line=<align>)
@@ -96,7 +136,7 @@ if($tamanio<3){
 	system("perl $jobsDir/Script/FindPDB.pl $jobsDir $jobID");
 		}
 else{
-		copy("/home/maria/Desktop/AutoLogo/@ARGV[2]","/home/maria/Desktop/AutoLogo/OutPutFiles$jobID/ListaPDB.txt");
+		copy("@ARGV[2]","$SCRIPTS_DIR/OutPutFiles$jobID/ListaPDB.txt");
 
 }
 
@@ -110,7 +150,7 @@ system ("perl $jobsDir/Script/DeleteGaps.pl $jobsDir $jobID");
 system ("hmmbuild --amino $jobsDir/OutPutFiles$jobID/familias.hmm $jobsDir/OutPutFiles$jobID/AlignClean.fasta");
 system ("hmmsearch --domtblout $jobsDir/OutPutFiles$jobID/salida $jobsDir/OutPutFiles$jobID/familias.hmm $jobsDir/OutPutFiles$jobID/AlignClean.fasta");
 
-open(hmmsal,"$jobsDir/OutPutFiles$jobID/salida");
+open(hmmsal,"$jobsDir/OutPutFiles$jobID/salida") or die "Can't open salida $!";
 
 my $in=0;
 my $seq;
@@ -126,7 +166,7 @@ while(my $line=<hmmsal>){
 	}
 }
 
-open(alignA, "$jobsDir/OutPutFiles$jobID/Alignment.fasta");
+open(alignA, "$jobsDir/OutPutFiles$jobID/Alignment.fasta") or die "Can't open Alignment.fasta $!";
 
 while(my $linealig=<alignA>){
 	chomp $linealig;
@@ -146,8 +186,8 @@ while(my $linealig=<alignA>){
 
 close(alignA);
 
-open(align, "$jobsDir/OutPutFiles$jobID/Alignment.fasta");
-open(sal,">$jobsDir/OutPutFiles$jobID/SeqAlign.fasta");
+open(align, "$jobsDir/OutPutFiles$jobID/Alignment.fasta") or die "Can't open Alignment.fasta $!";
+open(sal,">$jobsDir/OutPutFiles$jobID/SeqAlign.fasta") or die "Can't open SeqAlign.fasta $!";
 
 print sal ">$pdbidsal\n$seq";
 
@@ -165,7 +205,7 @@ while(my $line=<align>){
 
 }
 close(align);
-open(align, "$jobsDir/OutPutFiles$jobID/Alignment.fasta");
+open(align, "$jobsDir/OutPutFiles$jobID/Alignment.fasta") or die "Can't open Alignment.fasta $!";
 
 while(my $line=<align>){
 	print sal "$line";
@@ -175,9 +215,11 @@ close(align);
 close(sal);
 
 #-------Frustration-----
+print "################################\n";
+print "# Start Frustra calculations.. #\n";
+print "################################\n\n";
 
-
-open(Lista,"$jobsDir/OutPutFiles$jobID/ListaPDB.txt");
+open(Lista,"$jobsDir/OutPutFiles$jobID/ListaPDB.txt") or die "Can't open ListaPDB.txt $!";
 
 while(my $PDB=<Lista>){
 	chomp $PDB;
@@ -186,7 +228,13 @@ while(my $PDB=<Lista>){
 	if(@sperror[0]eq">"){}
 	else{		
 		my $tam=@sp;
-		copy("/home/maria/Desktop/PDBs/@sp[0].pdb","$jobsDir/OutPutFiles$jobID/@sp[0].pdb");
+		# copy("/home/maria/Desktop/PDBs/@sp[0].pdb","$jobsDir/OutPutFiles$jobID/@sp[0].pdb");
+	
+		# get zip pdb file from local DB
+		my $input = "$PDB_DIR/pdb@sp[0].ent.gz";
+		my $output = "$jobsDir/OutPutFiles$jobID/@sp[0].pdb";
+		gunzip $input => $output or die "gunzip failed: $GunzipError\n";;
+
 		#system ("wget 'http://www.rcsb.org/pdb/files/@sp[0].pdb' -O $jobsDir/OutPutFiles$jobID	/@sp[0].pdb");
 		if($tam==2){
 			system ("perl $jobsDir/Script/ChainSeparate.pl @sp[0] @sp[1] $jobsDir $jobID");
@@ -194,10 +242,10 @@ while(my $PDB=<Lista>){
 		else{
 			system ("perl $jobsDir/Script/ChainSeparate.pl @sp[0] @sp[1] $jobsDir $jobID @sp[2] @sp[3]");
 			}
-		copy("$jobsDir/OutPutFiles$jobID/Modeller/@sp[0].pdb","/home/maria/bin/Frustratometer/frustratometer2/@sp[0].pdb");
-		system ("cd /home/maria/bin/Frustratometer/frustratometer2; perl RunFrustratometer.pl @sp[0].B99990001.pdb singleresidue");
-		move("/home/maria/bin/Frustratometer/frustratometer2/@sp[0].pdb.done","$jobsDir/OutPutFiles$jobID/Modeller/@sp[0]_@sp[1].pdb.done");
-		move("/home/maria/bin/Frustratometer/frustratometer2/@sp[0].pdb","$jobsDir/OutPut$jobID/PDB/@sp[0].pdb");
+		copy("$jobsDir/OutPutFiles$jobID/Modeller/@sp[0].pdb","$FRUSTRATOMETER_DIR/@sp[0].pdb");
+		system ("cd $FRUSTRATOMETER_DIR; perl RunFrustratometer.pl @sp[0].pdb singleresidue");
+		move("$FRUSTRATOMETER_DIR/@sp[0].pdb.done","$jobsDir/OutPutFiles$jobID/Modeller/@sp[0]_@sp[1].pdb.done");
+		move("$FRUSTRATOMETER_DIR/@sp[0].pdb","$jobsDir/OutPut$jobID/PDB/@sp[0].pdb");
 		#sleep(5);
 		#system ("rm -r /home/maria/bin/Frustratometer/frustratometer2/@sp[0].B99990001.pdb");
 	}	
@@ -244,3 +292,29 @@ system("cd $jobsDir; tar -zcvf OutPut$jobID.tar.gz OutPut$jobID");
 #system("cd $jobsDir; rm -r OutPutFiles$jobID");
 #system("cd $jobsDir; rm -r OutPut$jobID");
 
+
+__END__
+
+=head1 NAME
+
+How to use EVOFRUSTRA
+
+=head1 SYNOPSIS
+
+RunAutoLogo.pl [options] -fasta [file] -jobid [name]
+
+=over 4
+
+ Options:
+	--fasta 	path to MSA fasta file
+	--jobid		name or description of the job
+	--missing 	consider missing residues? Y or N [default:N]
+	--help 		print this help message
+
+=back
+
+=head1 DESCRIPTION
+
+B<This program> will run evofrustra on your msa.
+
+=cut
