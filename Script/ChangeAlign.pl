@@ -21,7 +21,7 @@ while(my $line=<corregido>){
 		my $c=0;
 		while($c<$tam){
 			@splitres=split " ", $Sres;
-			if(@splitter[$c] eq "-"){
+			if((@splitter[$c] eq "-") or (@splitter[$c] eq "X")){
 				print salida "-";
 				}	
 			else{	
