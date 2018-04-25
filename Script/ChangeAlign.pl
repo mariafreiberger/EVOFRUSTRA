@@ -30,7 +30,7 @@ while(my $line=<corregido>){
 					$Sres=<Sres>;
 				}
 				else {
-					print salida "@splitres[2]";
+					print salida "@splitres[3]";
 					$Sres=<Sres>;
 					}
 				}
@@ -42,4 +42,3 @@ while(my $line=<corregido>){
 
 close(corregido);
 close(salida);
-
