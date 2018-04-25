@@ -27,7 +27,6 @@ while(my $alin=<align>){
 		$pdb="@splitter[1]@splitter[2]@splitter[3]@splitter[4]";
 		$ch="@splitter[6]";
 		$pdbch="@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]";
-		print corregido ">$pdbch\n";
 		my @splig= split "_",$alin;
 		my $tc=@splig;
 		my @com;
@@ -64,7 +63,7 @@ while(my $alin=<align>){
 			$long=@splitter;
 			$ta=@splitter;	
 			}
-		open (Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdb.pdb_singleresidue");
+		open (Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdbch.pdb_singleresidue");
 		my $Sres=<Sres>;
 		print SresSal "$Sres";
 		$Sres=<Sres>;
@@ -161,5 +160,4 @@ while(my $alin=<align>){
 }
 close(Sres);
 close(SresSal);
-close(corregido);
 close(align);
