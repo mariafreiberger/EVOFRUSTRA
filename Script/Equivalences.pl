@@ -32,9 +32,9 @@ while(my $align=<align>){
 						}	
 					else{				
 					print salida "$ter	@splitterSres[0]	@splitterSres[2]	@splitterSres[6]	";
-					if(@splitterSres[6]>0.55){print salida "MIN\n";}
+					if(@splitterSres[7]>0.55){print salida "MIN\n";}
 					else{
-						if(@splitterSres[6]>-1){print salida "NEU\n";}
+						if(@splitterSres[7]>-1){print salida "NEU\n";}
 						else{print salida "MAX\n";}
 								}							
 							}
