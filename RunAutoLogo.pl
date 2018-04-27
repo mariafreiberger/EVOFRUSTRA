@@ -35,6 +35,7 @@ copy("$jobsDir/Script/SeqLogo.R","$jobsDir/OutPutFiles$jobID/Equivalences/SeqLog
 copy("$jobsDir/Script/Logo.R","$jobsDir/OutPutFiles$jobID/Equivalences/Logo.R");
 
 open(align, "$jobsDir/$fastafile");
+
 my $c=0;
 my $n=0;
 
