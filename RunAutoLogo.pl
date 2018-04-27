@@ -38,7 +38,6 @@ open(align, "$jobsDir/$fastafile");
 my $c=0;
 my $n=0;
 
-open(lista,">$jobsDir/OutPutFiles$jobID/Lista.txt");
 open(salidafasta,">$jobsDir/OutPutFiles$jobID/Sequences.fasta");
 open(alin,">$jobsDir/OutPutFiles$jobID/AlignSE.fasta");
 my $co=0;
@@ -50,8 +49,6 @@ while(my $line=<align>)
 	if (@sp[0]eq">"){
 		$c++;
 		$n=0;
-		print blast ">Seq$c\n";
-		print lista "Seq$c\n";
 		if($c==1){print alin ">Seq$c\n";}
 		else{
 			print alin "\n>Seq$c\n";
@@ -65,12 +62,7 @@ while(my $line=<align>)
 			if(@sp[$co]eq"-"){
 				print alin "@sp[$co]";
 				$co++;}
-			else{
-				if($n==49){
-					print blast "\n";
-					$n=0;
-						}			
-				print blast "@sp[$co]";
+			else{			
 				print alin "@sp[$co]";
 				print salidafasta "@sp[$co]";
 				$co++;
@@ -81,8 +73,6 @@ while(my $line=<align>)
 		}
 }
 
-
-close(blast);
 close(align);
 close(lista);
 close(alin);
@@ -93,7 +83,7 @@ if($tamanio<3){
 	system("perl $jobsDir/Script/FindPDB.pl $jobsDir $jobID");
 		}
 else{
-		copy("/home/maria/Desktop/AutoLogo/@ARGV[2]","/home/maria/Desktop/AutoLogo/OutPutFiles$jobID/ListaPDB.txt");
+		copy("$jobsDir/@ARGV[2]","$jobsDir/OutPutFiles$jobID/ListaPDB.txt");
 
 }
 
