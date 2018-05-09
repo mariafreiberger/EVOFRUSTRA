@@ -14,4 +14,3 @@ open(num,">@ARGV[0]/OutPutFiles@ARGV[1]/long.txt");
 
 print num "$tam\n";
 close(num);
-
