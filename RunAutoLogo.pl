@@ -40,7 +40,7 @@ my $c=0;
 my $n=0;
 
 open(salidafasta,">$jobsDir/OutPutFiles$jobID/Sequences.fasta");
-open(alin,">$jobsDir/OutPutFiles$jobID/AlignSE.fasta");
+open(alin,">$jobsDir/OutPutFiles$jobID/Alignment.fasta");
 my $co=0;
 
 while(my $line=<align>)
@@ -80,17 +80,9 @@ close(alin);
 
 my $tamanio=@ARGV;
 
-if($tamanio<3){
-	system("perl $jobsDir/Script/FindPDB.pl $jobsDir $jobID");
-		}
-else{
-		copy("$jobsDir/@ARGV[2]","$jobsDir/OutPutFiles$jobID/ListaPDB.txt");
-
-}
-
 #----ChangesInAligment---
 
-system("perl $jobsDir/Script/FixAlign.pl $jobsDir $jobID");
+#
 system ("perl $jobsDir/Script/DeleteGaps.pl $jobsDir $jobID");
 
 #---------HHMSearch----
@@ -162,45 +154,20 @@ while(my $line=<align>){
 close(align);
 close(sal);
 
-#-------Frustration-----
+#----Frustra----
 
+if($tamanio<3){
+	system("perl $jobsDir/Script/FindPDB.pl $jobsDir $jobID $missa");
+		}
+else{
+	copy("$jobsDir/@ARGV[2]","$jobsDir/OutPutFiles$jobID/ListaPDB.txt");
+	system("perl $jobsDir/Script/FixAlign.pl $jobsDir $jobID");
+	system("perl $jobsDir/Script/FrustraPDB.pl $jobsDir $jobID $missa");
+}
 
-open(Lista,"$jobsDir/OutPutFiles$jobID/ListaPDB.txt");
-
-while(my $PDB=<Lista>){
-	chomp $PDB;
-	my @sp= split "_", $PDB;
-	my @sperror= split "", $PDB;
-	if(@sperror[0]eq">"){}
-	else{		
-		my $tam=@sp;
-		copy("/home/maria/Desktop/PDBs/@sp[0].pdb","$jobsDir/OutPutFiles$jobID/@sp[0].pdb");
-		#system ("wget 'http://www.rcsb.org/pdb/files/@sp[0].pdb' -O $jobsDir/OutPutFiles$jobID	/@sp[0].pdb");
-		if($tam==2){
-			system ("perl $jobsDir/Script/ChainSeparate.pl @sp[0] @sp[1] $jobsDir $jobID");
-			}
-		else{
-			system ("perl $jobsDir/Script/ChainSeparate.pl @sp[0] @sp[1] $jobsDir $jobID @sp[2] @sp[3]");
-			}
-		copy("$jobsDir/OutPutFiles$jobID/Modeller/@sp[0].pdb","/home/maria/bin/Frustratometer/frustratometer2/@sp[0]_@sp[1].pdb");
-		system ("cd /home/maria/bin/Frustratometer/frustratometer2; perl RunFrustratometer.pl @sp[0]_@sp[1].pdb singleresidue");
-		move("/home/maria/bin/Frustratometer/frustratometer2/@sp[0]_@sp[1].pdb.done","$jobsDir/OutPutFiles$jobID/Modeller/@sp[0]_@sp[1].pdb.done");
-		move("/home/maria/bin/Frustratometer/frustratometer2/@sp[0].pdb","$jobsDir/OutPut$jobID/PDB/@sp[0]_@sp[1].pdb");
-		#sleep(5);
-		#system ("rm -r /home/maria/bin/Frustratometer/frustratometer2/@sp[0].B99990001.pdb");
-	}
-}	
-close(Lista);
 
 #----Equivalences---
-system ("perl $jobsDir/Script/VerificaFrustra.pl $jobsDir $jobID");
-if($missa eq "Y"){
-	system ("perl $jobsDir/Script/MissingComplete.pl $jobsDir $jobID");
-	system ("perl $jobsDir/Script/ChangeAlign.pl $jobsDir $jobID");
-}
-else{
-	copy("$jobsDir/OutPutFiles$jobID/SeqAlign.fasta","$jobsDir/OutPutFiles$jobID/SeqAlign3.fasta");
-}
+
 system ("perl $jobsDir/Script/FinalAlign.pl $jobsDir $jobID");
 system ("perl $jobsDir/Script/Equivalences.pl $jobsDir $jobID");
 
