@@ -20,9 +20,12 @@ while(my $PDB=<Lista>){
 			system ("perl @ARGV[0]/Script/ChainSeparate.pl @sp[0] @sp[1] @ARGV[0] @ARGV[1] @sp[2] @sp[3]");
 			}
 		copy("@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@sp[0].pdb","/home/maria/bin/Frustratometer/frustratometer2/@sp[0]_@sp[1].pdb");
-		system ("cd /home/maria/bin/Frustratometer/frustratometer2; perl RunFrustratometer.pl @sp[0]_@sp[1].pdb singleresidue");
+		system ("cd /home/maria/bin/Frustratometer/frustratometer2; perl RunFrustratometer.pl @sp[0]_@sp[1].pdb singleresidue");	
 		move("/home/maria/bin/Frustratometer/frustratometer2/@sp[0]_@sp[1].pdb.done","@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@sp[0]_@sp[1].pdb.done");
 		move("/home/maria/bin/Frustratometer/frustratometer2/@sp[0]_@sp[1].pdb","@ARGV[0]/OutPut@ARGV[1]/PDB/@sp[0]_@sp[1].pdb");
+		copy("@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@sp[0]_@sp[1].pdb.done/FrustrationData/@sp[0]_@sp[1].pdb_singleresidue","@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@sp[0]_@sp[1].pdb.done/FrustrationData/@sp[0].pdb_singleresidue");
+		
+}
 		#sleep(5);
 		#system ("rm -r /home/maria/bin/Frustratometer/frustratometer2/@sp[0].B99990001.pdb");
 	}
