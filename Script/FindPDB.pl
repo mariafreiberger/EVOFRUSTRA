@@ -22,6 +22,7 @@ while(my $lineB=<blista>){
 	system ("cd /home/maria/bin/Frustratometer/frustratometer2; perl RunFrustratometer.pl @sp[0]_@sp[1].pdb singleresidue");
 	move("/home/maria/bin/Frustratometer/frustratometer2/@sp[0]_@sp[1].pdb.done","@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@sp[0]_@sp[1].pdb.done");
 	move("/home/maria/bin/Frustratometer/frustratometer2/@sp[0]_@sp[1].pdb","@ARGV[0]/OutPut@ARGV[1]/PDB/@sp[0]_@sp[1].pdb");
+	copy("@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@sp[0]_@sp[1].pdb.done/FrustrationData/@sp[0]_@sp[1].pdb_singleresidue","@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@sp[0]_@sp[1].pdb.done/FrustrationData/@sp[0].pdb_singleresidue");
 }
 system("perl @ARGV[0]/Script/FixAlign.pl @ARGV[0] @ARGV[1]");
 system("perl @ARGV[0]/Script/VerificaFrustra.pl @ARGV[0] @ARGV[1]");
