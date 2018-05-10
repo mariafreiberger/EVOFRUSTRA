@@ -21,7 +21,6 @@ while(my $line=<corregido>){
 		$Sres=<Sres>;
 		my @splitres;
 		my $tam=@splitter;
-		print "$tam ";
 		my $c=0;
 		while($c<$tam){
 			@splitres=split " ", $Sres;
@@ -32,7 +31,7 @@ while(my $line=<corregido>){
 			else{	
 				if(@splitres[1] eq "Missing"){
 					print salida "-";
-					print sali "Z";	
+					print sali "Z";
 					$Sres=<Sres>;
 				}
 				else {
@@ -46,6 +45,7 @@ while(my $line=<corregido>){
 		}
 	print salida "\n";
 	print sali "\n";
+
 }
 
 close(corregido);
