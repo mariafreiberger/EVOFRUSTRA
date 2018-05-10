@@ -38,20 +38,24 @@ while(my $alin=<align>){
 			my @busca= split " ", $busca;
 			if($tc>2){
 			if((@busca[0] eq "REMARK")and(@busca[1]==465)and(@busca[3] eq $ch)and($comi<=@busca[4])){
+				if(@busca[4]=~/A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z/g){
+					@busca[4]=$`;
+					}
 				@com[$count]=@busca[4];
-				print "$pdbch = $comi - @busca[4] ";
 				$count++;
 					}
 				}
 			else{
 				if((@busca[0] eq "REMARK")and(@busca[1]==465)and(@busca[3] eq $ch)){
-				@com[$count]=@busca[4];
-				$count++;
+					if(@busca[4]=~/A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z/g){
+						@busca[4]=$`;
+						}
+					@com[$count]=@busca[4];
+					$count++;
 						}
 					}
 
 				}
-			print "$pdbch = $count;";		
 			close(busca);	
 		if($count==0){
 			copy("@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdbch.pdb_singleresidue","@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdb.pdb_singleresidue");}
