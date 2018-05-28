@@ -25,10 +25,9 @@ while(my $PDB=<Lista>){
 		move("/home/maria/bin/Frustratometer/frustratometer2/@sp[0]_@sp[1].pdb","@ARGV[0]/OutPut@ARGV[1]/PDB/@sp[0]_@sp[1].pdb");
 		copy("@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@sp[0]_@sp[1].pdb.done/FrustrationData/@sp[0]_@sp[1].pdb_singleresidue","@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@sp[0]_@sp[1].pdb.done/FrustrationData/@sp[0].pdb_singleresidue");
 		
-}
+	}
 		#sleep(5);
 		#system ("rm -r /home/maria/bin/Frustratometer/frustratometer2/@sp[0].B99990001.pdb");
-	}
 }	
 close(Lista);
 system("perl @ARGV[0]/Script/FixAlign.pl @ARGV[0] @ARGV[1]");
@@ -40,4 +39,5 @@ if(@ARGV[2] eq "Y"){
 }
 else{
 	copy("@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign2.fasta","@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign3.fasta");
+	copy("@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign2.fasta","@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign4.fasta");
 }
