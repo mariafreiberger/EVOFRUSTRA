@@ -46,7 +46,8 @@ while(my $alin=<align>){
 					}
 				}
 			else{
-				if((@busca[0] eq "REMARK")and(@busca[1]==465)and(@busca[3] eq $ch)){
+				if($comi>@busca[4]){}
+				else{
 					if(@busca[4]=~/A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z/g){
 						@busca[4]=$`;
 						}
