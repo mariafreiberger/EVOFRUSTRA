@@ -1,7 +1,7 @@
 use strict;
 
 open(lista,"@ARGV[0]/OutPutFiles@ARGV[1]/AlignSE.fasta");
-open(sal,">@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign2.fasta");
+open(sal,">@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign.fasta");
 open (salida,">@ARGV[0]/OutPutFiles@ARGV[1]/ListaPDBC.txt");
 
 while(my $lista=<lista>){
