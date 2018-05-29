@@ -1,22 +1,20 @@
-
+use Bio::SeqIO;
 use strict;
 
-open(fasta,"@ARGV[0]/OutPutFiles@ARGV[1]/Alignment.fasta"); #archivo alineado
 open(nuevo,">@ARGV[0]/OutPutFiles@ARGV[1]/AlignClean.fasta"); #salida
+
 
 my @vector;
 my $c=0;
+my $alignment="@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign.fasta";
 
-while(my $line=<fasta>){
-	my @splitter= split "",$line;
-	if(@splitter[0]eq">"){}
-	else {
-		@vector[$c]=$line;
-		$c++;		
-		}
+my $secuencia = Bio::SeqIO -> new(
+	-format => "fasta",
+	-file => "$alignment");
+while (my $SEQ = $secuencia->next_seq()){
+	@vector[$c]=$SEQ->seq();
+	$c++;
 }
-
-close(fasta);
 
 my $i=0;
 my $j=0;
@@ -44,35 +42,32 @@ while($i<$tam){
 	$i++;
 }
 
-open(fasta,"@ARGV[0]/OutPutFiles@ARGV[1]/Alignment.fasta"); #archivo alineado
 $tam=@vect_gaps;
 my $c=0;
-while(my $line=<fasta>){
+
+my $secuencia2 = Bio::SeqIO -> new(
+	-format => "fasta",
+	-file => "$alignment");
+
+while (my $SEQ2 = $secuencia2->next_seq()){
 	$i=0;
+	my $SEC2=$SEQ2->seq();
 	my $pr=0;
-	my @splitter= split "",$line;
-	if(@splitter[0]eq">"){
-		if($c==0){
-			print nuevo "$line";	
-			$c++;
-			}
-		else{
-			print nuevo "\n$line"
-			}
-		}		
-	else{	
-		while($i<$tam+1){
-			if(@vect_gaps[$i]==0){
-				if($pr==60){print nuevo "\n";
+	print nuevo ">",$SEQ2->display_id,"\n";
+	my @splitter= split "",$SEC2;
+	while($i<$tam+1){
+		if(@vect_gaps[$i]==0){
+			if($pr==60)
+				{print nuevo "\n";
 					$pr=0;				
 						}			
-				else {print nuevo "@splitter[$i]";
+			else {print nuevo "@splitter[$i]";
 					$pr++;			
 					}
 			}
 			$i++;
 		}
-	}
+	print nuevo "\n"
 }
-close(fasta);
+
 close(nuevo);
