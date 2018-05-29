@@ -37,25 +37,33 @@ while(my $alin=<align>){
 		while(my $busca=<busca>){
 			my @busca= split " ", $busca;
 			if($tc>2){
-			if((@busca[0] eq "REMARK")and(@busca[1]==465)and(@busca[3] eq $ch)and($comi<=@busca[4])){
-				if(@busca[4]=~/A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z/g){
-					@busca[4]=$`;
-					}
-				@com[$count]=@busca[4];
-				$count++;
-					}
-				}
-			else{
-				if($comi>@busca[4]){}
-				else{
+				if((@busca[0] eq "REMARK")and(@busca[1]==465)and(@busca[3] eq $ch)and($comi>=@busca[4])){
 					if(@busca[4]=~/A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z/g){
 						@busca[4]=$`;
 						}
 					@com[$count]=@busca[4];
 					$count++;
+					}
+				else{
+					if($comi<0){
+						if((@busca[0] eq "REMARK")and(@busca[1]==465)and(@busca[3] eq $ch)and($comi<=@busca[4])){
+							if(@busca[4]=~/A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z/g){
+							@busca[4]=$`;
+							}
+						@com[$count]=@busca[4];
+						$count++;
+							}
+		
 						}
 					}
-
+				}
+			else{
+				if(@busca[4]=~/A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z/g){
+						@busca[4]=$`;
+						}
+					@com[$count]=@busca[4];
+					$count++;
+						}
 				}
 			close(busca);	
 		if($count==0){
@@ -93,5 +101,3 @@ close(sressal);
 }
 close(align);
 close(Sal);
-
-	
