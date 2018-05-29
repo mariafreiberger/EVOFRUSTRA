@@ -33,6 +33,12 @@ while(my $align=<align>){
 									$r=0;	
 								}
 						}
+					print salida "$ter	@splitterSres[0]	@splitterSres[3]	@splitterSres[7]	";		
+					if(@splitterSres[7]>0.55){print salida "MIN\n";}
+					else{
+						if(@splitterSres[7]>-1){print salida "NEU\n";}
+						else{print salida "MAX\n";}
+						}
 					}
 				else{
 					print salida "$ter	@splitterSres[0]	@splitterSres[3]	@splitterSres[7]	";		
