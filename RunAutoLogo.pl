@@ -1,5 +1,6 @@
 use strict;
 use File::Copy;
+use Bio::SeqIO;
 
 my $fastafile=$ARGV[1];
 my $jobID=$ARGV[0];
@@ -34,136 +35,53 @@ copy("$jobsDir/Script/Generator.R","$jobsDir/OutPutFiles$jobID/Equivalences/Gene
 copy("$jobsDir/Script/SeqLogo.R","$jobsDir/OutPutFiles$jobID/Equivalences/SeqLogo.R");
 copy("$jobsDir/Script/Logo.R","$jobsDir/OutPutFiles$jobID/Equivalences/Logo.R");
 
-open(align, "$jobsDir/$fastafile");
-
 my $c=0;
 my $n=0;
 
 open(salidafasta,">$jobsDir/OutPutFiles$jobID/Sequences.fasta");
 open(alin,">$jobsDir/OutPutFiles$jobID/Alignment.fasta");
 my $co=0;
+my $alignment="$jobsDir/$fastafile";
 
-while(my $line=<align>)
-{
-	chomp $line;
-	my @sp=split "", $line;	
-	if (@sp[0]eq">"){
-		$c++;
-		$n=0;
-		if($c==1){print alin ">Seq$c\n";}
+my $secuencia = Bio::SeqIO -> new(
+	-format => "fasta",
+	-file => "$alignment");
+
+while (my $SEQ = $secuencia->next_seq()){
+	my $SEC=$SEQ->seq();
+	my @splitter= split "",$SEC;
+	$c++;
+	print alin ">Seq$c\n";
+	my $long=$SEQ->length;
+	$co=0;
+	while($co<$long){
+		if(@splitter[$co] eq "-"){
+			print alin "@splitter[$co]";
+			}
 		else{
-			print alin "\n>Seq$c\n";
-			print salidafasta "\n";			
+			print alin "@splitter[$co]";
+			print salidafasta "@splitter[$co]";
 			}
+		$co++;
 		}
-	else {
-		my $tam=@sp;
-		$co=0;
-		while ($co<$tam){
-			if(@sp[$co]eq"-"){
-				print alin "@sp[$co]";
-				$co++;}
-			else{			
-				print alin "@sp[$co]";
-				print salidafasta "@sp[$co]";
-				$co++;
-				$n++;
-				}
-			}
-		
-		}
+	print salidafasta "\n";
+	print alin "\n";
 }
-
 close(align);
 close(lista);
-close(alin);
 
 my $tamanio=@ARGV;
-
-#----ChangesInAligment---
-
-#
-system ("perl $jobsDir/Script/DeleteGaps.pl $jobsDir $jobID");
-
-#---------HHMSearch----
-
-system ("hmmbuild --amino $jobsDir/OutPutFiles$jobID/familias.hmm $jobsDir/OutPutFiles$jobID/AlignClean.fasta");
-system ("hmmsearch --domtblout $jobsDir/OutPutFiles$jobID/salida $jobsDir/OutPutFiles$jobID/familias.hmm $jobsDir/OutPutFiles$jobID/AlignClean.fasta");
-
-open(hmmsal,"$jobsDir/OutPutFiles$jobID/salida");
-
-my $in=0;
-my $seq;
-my $pdbidsal;
-
-while(my $line=<hmmsal>){
-	my @splitter= split "", $line;
-	if(@splitter[0]eq"#"){}
-	else{
-		my @spline= split " ", $line;
-		$pdbidsal=@spline[0];
-		last;
-	}
-}
-
-open(alignA, "$jobsDir/OutPutFiles$jobID/Alignment.fasta");
-
-while(my $linealig=<alignA>){
-	chomp $linealig;
-	chomp $linealig;
-	my @spalig= split "", $linealig;
-	my @aux=split " ", $linealig;
-	my @spaliges= split ">", @aux[0];
-	if(@spalig[0] eq ">"){
-		print sa "@spaliges[1]eq $pdbidsal\n";
-		if(@spaliges[1] eq $pdbidsal){
-			$seq=<alignA>;
-			print sa "@spaliges[1] $seq";
-			last;
-		}
-	}
-}
-
-close(alignA);
-
-open(align, "$jobsDir/OutPutFiles$jobID/Alignment.fasta");
-open(sal,">$jobsDir/OutPutFiles$jobID/SeqAlign.fasta");
-
-print sal ">$pdbidsal\n$seq";
-
-while(my $line=<align>){
-	chomp $line;
-	my @sp=split "", $line;
-	if (@sp[0]eq">"){		
-		my @spaux=split ">", $line;
-		if(@spaux[1]eq$seq){
-			print sal "$line\n";
-			$line=<align>;
-			print sal "$line\n";
-			}
-		}
-
-}
-close(align);
-open(align, "$jobsDir/OutPutFiles$jobID/Alignment.fasta");
-
-while(my $line=<align>){
-	print sal "$line";
-}
-
-close(align);
-close(sal);
 
 #----Frustra----
 
 if($tamanio<3){
-	system("perl $jobsDir/Script/FindPDB.pl $jobsDir $jobID $missa");
+	system("perl $jobsDir/Script/FindPDB.pl $jobsDir $jobID");
 		}
 else{
 	copy("$jobsDir/@ARGV[2]","$jobsDir/OutPutFiles$jobID/ListaPDB.txt");
-	system("perl $jobsDir/Script/FixAlign.pl $jobsDir $jobID");
-	system("perl $jobsDir/Script/FrustraPDB.pl $jobsDir $jobID $missa");
 }
+
+system("perl $jobsDir/Script/FrustraPDB.pl $jobsDir $jobID $missa");
 
 
 #----Equivalences---
