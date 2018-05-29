@@ -1,5 +1,6 @@
 use strict;
 use File::Copy;
+use Bio::SeqIO;
 
 open(Lista,"@ARGV[0]/OutPutFiles@ARGV[1]/ListaPDB.txt");
 my @sp;
@@ -26,12 +27,82 @@ while(my $PDB=<Lista>){
 		copy("@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@sp[0]_@sp[1].pdb.done/FrustrationData/@sp[0]_@sp[1].pdb_singleresidue","@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@sp[0]_@sp[1].pdb.done/FrustrationData/@sp[0].pdb_singleresidue");
 		
 	}
-		#sleep(5);
-		#system ("rm -r /home/maria/bin/Frustratometer/frustratometer2/@sp[0].B99990001.pdb");
 }	
 close(Lista);
+
+#----ChangesInAligment---
+
 system("perl @ARGV[0]/Script/FixAlign.pl @ARGV[0] @ARGV[1]");
 system("perl @ARGV[0]/Script/VerificaFrustra.pl @ARGV[0] @ARGV[1]");
+
+#
+system ("perl @ARGV[0]/Script/DeleteGaps.pl @ARGV[0] @ARGV[1]");
+
+#---------HHMSearch----
+
+system ("hmmbuild --amino @ARGV[0]/OutPutFiles@ARGV[1]/familias.hmm @ARGV[0]/OutPutFiles@ARGV[1]/AlignClean.fasta");
+system ("hmmsearch --domtblout @ARGV[0]/OutPutFiles@ARGV[1]/salida @ARGV[0]/OutPutFiles@ARGV[1]/familias.hmm @ARGV[0]/OutPutFiles@ARGV[1]/AlignClean.fasta");
+
+open(hmmsal,"@ARGV[0]/OutPutFiles@ARGV[1]/salida");
+
+my $in=0;
+my $pdbidsal;
+
+while(my $line=<hmmsal>){
+	my @splitter= split "", $line;
+	if(@splitter[0]eq"#"){}
+	else{
+		my @spline= split " ", $line;
+		$pdbidsal=@spline[0];
+		last;
+	}
+}
+
+my $alignment="@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign.fasta";
+
+my $secuencia = Bio::SeqIO -> new(
+	-format => "fasta",
+	-file => "$alignment");
+my $seq;
+
+while (my $SEQ = $secuencia->next_seq()){
+	$seq=$SEQ->seq();
+	my @splitter= split "",$seq;
+	if($SEQ->display_id eq $pdbidsal){
+			last;
+	}
+}
+
+close(alignA);
+
+open(align, "@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign.fasta");
+open(sal,">@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign2.fasta");
+
+print sal ">$pdbidsal\n$seq\n\n";
+
+while(my $line=<align>){
+	chomp $line;
+	my @sp=split "", $line;
+	if (@sp[0]eq">"){		
+		my @spaux=split ">", $line;
+		if(@spaux[1]eq$seq){
+			print sal "$line\n";
+			$line=<align>;
+			print sal "$line\n";
+			}
+		}
+
+}
+close(align);
+open(align, "@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign.fasta");
+
+while(my $line=<align>){
+	print sal "$line";
+}
+
+close(align);
+close(sal);
+
 
 if(@ARGV[2] eq "Y"){
 	system ("perl @ARGV[0]/Script/MissingComplete.pl @ARGV[0] @ARGV[1] @sp[2]");
