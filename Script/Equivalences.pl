@@ -24,29 +24,21 @@ while(my $align=<align>){
 				chomp $Sres;
 				my @splitterSres=split " ",$Sres;
 				if(@splitterSres[0] != @splitalignes[$ter-1]){
-						my $r=1;
-						while($r){
+						while(){
 							$Sres=<Sres>;
 							chomp $Sres;
 							@splitterSres=split " ",$Sres;
+							print "(@splitterSres[0] == @splitalignes[$ter-1]) ";
 							if(@splitterSres[0] == @splitalignes[$ter-1]){
-									$r=0;	
+									last;	
 								}
 						}
-					print salida "$ter	@splitterSres[0]	@splitterSres[3]	@splitterSres[7]	";		
-					if(@splitterSres[7]>0.55){print salida "MIN\n";}
-					else{
-						if(@splitterSres[7]>-1){print salida "NEU\n";}
-						else{print salida "MAX\n";}
-						}
-					}
+				}
+				print salida "$ter	@splitterSres[0]	@splitterSres[3]	@splitterSres[7]	";		
+				if(@splitterSres[7]>0.55){print salida "MIN\n";}
 				else{
-					print salida "$ter	@splitterSres[0]	@splitterSres[3]	@splitterSres[7]	";		
-					if(@splitterSres[7]>0.55){print salida "MIN\n";}
-					else{
-						if(@splitterSres[7]>-1){print salida "NEU\n";}
-						else{print salida "MAX\n";}
-								}							
+					if(@splitterSres[7]>-1){print salida "NEU\n";}
+					else{print salida "MAX\n";}
 					}
 				}
 			}
