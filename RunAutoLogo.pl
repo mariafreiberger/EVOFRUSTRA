@@ -39,6 +39,7 @@ my $c=0;
 my $n=0;
 
 open(salidafasta,">$jobsDir/OutPutFiles$jobID/Sequences.fasta");
+open(sfasta,">$jobsDir/OutPutFiles$jobID/Sequences_Hit.fasta");
 open(alin,">$jobsDir/OutPutFiles$jobID/Alignment.fasta");
 my $co=0;
 my $alignment="$jobsDir/$fastafile";
@@ -52,6 +53,7 @@ while (my $SEQ = $secuencia->next_seq()){
 	my @splitter= split "",$SEC;
 	$c++;
 	print alin ">Seq$c\n";
+	print sfasta ">Seq$c\n";
 	my $long=$SEQ->length;
 	$co=0;
 	while($co<$long){
@@ -61,11 +63,13 @@ while (my $SEQ = $secuencia->next_seq()){
 		else{
 			print alin "@splitter[$co]";
 			print salidafasta "@splitter[$co]";
+			print sfasta "@splitter[$co]";
 			}
 		$co++;
 		}
 	print salidafasta "\n";
 	print alin "\n";
+	print sfasta "\n";
 }
 close(align);
 close(lista);
