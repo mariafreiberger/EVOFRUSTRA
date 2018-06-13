@@ -11,6 +11,8 @@ my $m=0;
 my $j;
 my $control=0;
 my @splres;
+my @slista;
+my $r=0;
 
 while(my $align=<align>){
 	my $sres;
@@ -40,7 +42,10 @@ while(my $align=<align>){
 		else{
 			if(@splitter[0]eq">"){
 				open(Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6].pdb.done/FrustrationData/@splitter[1]@splitter[2]@splitter[3]@splitter[4].pdb_singleresidue");
-					$sres=<Sres>;
+				$sres=<Sres>;
+				@slista=split "_",$align;
+				print "@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6] = @slista[2]\n";
+				$r=0;
 				if($m==0){
 					print nuevo ">@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]\n";
 					print nuevo2 ">@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]\n";	
@@ -91,6 +96,11 @@ while(my $align=<align>){
 							else{	
 								$sres=<Sres>;
 								@splres= split " ",$sres;
+								if((@slista[2] <= @splres[0])and($r==0)){}
+								else{
+									@splres[0]=@splres[0]+@slista[2]-1;
+									$r++;
+									}
 								print posi "@splres[0] ";	
 								}	
 							}
