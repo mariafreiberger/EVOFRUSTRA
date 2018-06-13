@@ -44,7 +44,6 @@ while(my $align=<align>){
 				open(Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6].pdb.done/FrustrationData/@splitter[1]@splitter[2]@splitter[3]@splitter[4].pdb_singleresidue");
 				$sres=<Sres>;
 				@slista=split "_",$align;
-				print "@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6] = @slista[2]\n";
 				$r=0;
 				if($m==0){
 					print nuevo ">@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]\n";
