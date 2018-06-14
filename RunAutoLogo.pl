@@ -98,11 +98,11 @@ system ("perl $jobsDir/Script/Equivalences.pl $jobsDir $jobID");
 system("perl $jobsDir/Script/FastaMod.pl $jobsDir $jobID");
 copy ("$jobsDir/OutPutFiles$jobID/long.txt","$jobsDir/OutPutFiles$jobID/Equivalences/long.txt");
 system("cd $jobsDir/OutPutFiles$jobID/Equivalences; cat *SalidaSRes* > AllSalidaSResB.txt");
+system("perl $jobsDir/Script/LogoCheck.pl $jobsDir $jobID");
 system("cd $jobsDir/OutPutFiles$jobID/Equivalences; Rscript Logo.R");
 system("cd $jobsDir/OutPutFiles$jobID/Equivalences; Rscript Generator.R");
 system("cd $jobsDir/OutPutFiles$jobID/Equivalences; Rscript SeqLogo.R");
 system("perl $jobsDir/Script/VScript.pl $jobsDir $jobID");
-system("perl $jobsDir/Script/LogoCheck.pl $jobsDir $jobID");
 
 copy ("$jobsDir/OutPutFiles$jobID/Equivalences/HistogramFrustration.svg","$jobsDir/OutPut$jobID/HistogramFrustration.svg");
 
