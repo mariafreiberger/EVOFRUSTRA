@@ -28,8 +28,7 @@ while(my $align=<align>){
 							$Sres=<Sres>;
 							chomp $Sres;
 							@splitterSres=split " ",$Sres;
-							print "(@splitterSres[0] == @splitalignes[$ter-1]) ";
-							if(@splitterSres[0] == @splitalignes[$ter-1]){
+							if((@splitterSres[0] == @splitalignes[$ter-1]) or (@splitterSres[0] eq "")){
 									last;	
 								}
 						}
