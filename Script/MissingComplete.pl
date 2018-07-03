@@ -20,6 +20,7 @@ while(my $alin=<align>){
 	chomp $alin;
 	my $cline=0;
 	my $long=0;
+	@com="";
 	my @sp;
 	my $ba=0;
 	my $ta;
@@ -27,8 +28,9 @@ while(my $alin=<align>){
 	if (@splitter[0]eq">"){
 		print sal "@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]\n";
 		$pdb="@splitter[1]@splitter[2]@splitter[3]@splitter[4]";
-		$ch="@splitter[6]";
+		$ch=@splitter[6];
 		$pdbch="@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]";
+		print "$pdbch: ";
 		my @splig= split "_",$alin;
 		$comi=@splig[2];
 		my $tc=@splig;
@@ -38,22 +40,20 @@ while(my $alin=<align>){
 			my @busca= split " ", $busca;
 			if($tc>2){
 				if((@busca[0] eq "REMARK")and(@busca[1]==465)and(@busca[3] eq $ch)and($comi<=@busca[4])){
-					if(@busca[4]=~/A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z/g){
-						@busca[4]=$`;
-						}
 					@com[$count]=@busca[4];
 					$count++;
 					}
 				}
 			else{
-				if(@busca[4]=~/A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z/g){
-						@busca[4]=$`;
-						}
+				if((@busca[0] eq "REMARK")and(@busca[1]==465)and(@busca[3] eq $ch)){
 					@com[$count]=@busca[4];
+					print "$busca ";
 					$count++;
-						}
-				}
-			close(busca);	
+					}
+				}		
+			}
+			close(busca);
+		print "@com\n";
 		if($count==0){
 			copy("@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdbch.pdb_singleresidue","@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdb.pdb_singleresidue");}
 		else{
@@ -77,7 +77,7 @@ while(my $alin=<align>){
 					}
 				}
 			if(@spl[0]<@com[$cnt]){
-					while($cnt<=$count){
+					while($cnt<=$count-1){
 						print sressal "@com[$cnt] Missing Residue\n";
 						$cnt++;					
 							}
