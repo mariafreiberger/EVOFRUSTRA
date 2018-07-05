@@ -8,7 +8,6 @@ while(my $lista=<Lista>){
 	my @splitter=split "_",$lista;
 	open(sal,">@ARGV[0]/OutPut@ARGV[1]/VisualizationScript/@splitter[0]_@splitter[1].pml");
 	open(Equi,"@ARGV[0]/OutPutFiles@ARGV[1]/Equivalences/SalidaSRes@splitter[0]_@splitter[1].txt");
-	print "@ARGV[0]/OutPutFiles@ARGV[1]/Equivalences/SalidaSRes@splitter[0]_@splitter[1].txt";
 	open(EstCon,"@ARGV[0]/OutPutFiles@ARGV[1]/Equivalences/CharactPosDataN");
 	print sal "load @ARGV[0]/OutPut@ARGV[1]/PDB/@splitter[0].pdb\nhide all\nshow cartoon, all\nbg_color white\ncolor black, all";
 	my $EstCon=<EstCon>;
