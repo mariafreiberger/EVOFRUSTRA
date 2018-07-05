@@ -24,6 +24,7 @@ else{
 	}
 }
 
+
 mkdir "$jobsDir/OutPutFiles$jobID";
 mkdir "$jobsDir/OutPutFiles$jobID/Modeller";
 mkdir "$jobsDir/OutPutFiles$jobID/Equivalences";
@@ -73,14 +74,38 @@ while (my $SEQ = $secuencia->next_seq()){
 }
 close(align);
 close(lista);
+close(alin);
+
+copy ("$jobsDir/OutPutFiles$jobID/Alignment.fasta",">$jobsDir/OutPutFiles$jobID/AlignmentBis.fasta");
 
 my $tamanio=@ARGV;
 
 #----Frustra----
 
 if($tamanio<3){
-	system("perl $jobsDir/Script/FindPDB.pl $jobsDir $jobID");
+	print "Is it a protein domain? (Y/N): ";
+	my $Dom = <STDIN>;
+	chomp $Dom;
+	$Dom=uc($Dom);
+	my $d=1;
+	while($d){
+		if(($Dom eq "Y")or($Dom eq "N")){
+			$d=0;
+			}
+		else{
+			print "Is it a protein domain? (Y/N), please select a correct option: ";
+			$Dom = <STDIN>;
+			chomp $Dom;
+			$Dom=uc($Dom);
+			}
 		}
+	if($Dom eq "Y"){
+		system("perl $jobsDir/Script/FindPDBDom.pl $jobsDir $jobID")
+		}
+	else{
+		system("perl $jobsDir/Script/FindPDB.pl $jobsDir $jobID");
+		}	
+	}
 else{
 	copy("$jobsDir/@ARGV[2]","$jobsDir/OutPutFiles$jobID/ListaPDB.txt");
 }
@@ -92,6 +117,8 @@ system("perl $jobsDir/Script/FrustraPDB.pl $jobsDir $jobID $missa");
 
 system ("perl $jobsDir/Script/FinalAlign.pl $jobsDir $jobID");
 system ("perl $jobsDir/Script/Equivalences.pl $jobsDir $jobID");
+
+sleep(10);
 
 #--LLamar a todos los .R---
 
