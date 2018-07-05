@@ -30,7 +30,6 @@ while(my $alin=<align>){
 		$pdb="@splitter[1]@splitter[2]@splitter[3]@splitter[4]";
 		$ch=@splitter[6];
 		$pdbch="@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]";
-		print "$pdbch: ";
 		my @splig= split "_",$alin;
 		$comi=@splig[2];
 		my $tc=@splig;
@@ -47,13 +46,11 @@ while(my $alin=<align>){
 			else{
 				if((@busca[0] eq "REMARK")and(@busca[1]==465)and(@busca[3] eq $ch)){
 					@com[$count]=@busca[4];
-					print "$busca ";
 					$count++;
 					}
 				}		
 			}
 			close(busca);
-		print "@com\n";
 		if($count==0){
 			copy("@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdbch.pdb_singleresidue","@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdb.pdb_singleresidue");}
 		else{
