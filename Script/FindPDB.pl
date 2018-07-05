@@ -9,7 +9,7 @@ my $pdb;
 while(my $lineB=<blista>){
 	chomp $lineB;
 	$lineB =~ tr/a-z/A-Z/;
-	system("awk '\$2 ~ /$lineB/' @ARGV[0]/DBSeq.fasta > @ARGV[0]/OutPutFiles@ARGV[1]/Listaawk.txt");
+	system("awk 'match(\$2, /$lineB/)' @ARGV[0]/DBSeq.fasta > @ARGV[0]/OutPutFiles@ARGV[1]/Listaawk.txt");
 	open (awk,"@ARGV[0]/OutPutFiles@ARGV[1]/Listaawk.txt");
 	my $awk=<awk>;
 	chomp $awk;
