@@ -1,6 +1,5 @@
 use strict;
 use File::Copy;
-use Bio::SeqIO;
 
 my $fastafile=$ARGV[1];
 my $jobID=$ARGV[0];
@@ -40,38 +39,39 @@ my $c=0;
 my $n=0;
 
 open(salidafasta,">$jobsDir/OutPutFiles$jobID/Sequences.fasta");
-open(sfasta,">$jobsDir/OutPutFiles$jobID/Sequences_Hit.fasta");
+open(sfasta,"$jobsDir/$fastafile");
 open(alin,">$jobsDir/OutPutFiles$jobID/Alignment.fasta");
 my $co=0;
-my $alignment="$jobsDir/$fastafile";
 
-my $secuencia = Bio::SeqIO -> new(
-	-format => "fasta",
-	-file => "$alignment");
-
-while (my $SEQ = $secuencia->next_seq()){
-	my $SEC=$SEQ->seq();
-	my @splitter= split "",$SEC;
+while (my $sfasta=<sfasta>){
+	chomp $sfasta;
+	my @splitter= split "",$sfasta;
 	$c++;
-	print alin ">Seq$c\n";
-	print sfasta ">Seq$c\n";
-	my $long=$SEQ->length;
-	$co=0;
-	while($co<$long){
-		if(@splitter[$co] eq "-"){
-			print alin "@splitter[$co]";
-			}
+	if(@splitter[0] eq ">"){
+		if($c==1){}
 		else{
-			print alin "@splitter[$co]";
-			print salidafasta "@splitter[$co]";
-			print sfasta "@splitter[$co]";
+			print salidafasta "\n";
+			print alin "\n";
 			}
-		$co++;
-		}
-	print salidafasta "\n";
-	print alin "\n";
-	print sfasta "\n";
-}
+		print alin ">Seq$c\n";
+	}
+	else{
+		$co=0;
+		my $long=@splitter;
+		while($co<$long){
+			if(@splitter[$co] eq "-"){
+				print alin "@splitter[$co]";
+				}
+			else{
+					print alin "@splitter[$co]";
+					print salidafasta "@splitter[$co]";
+				}
+			$co++;
+			}
+		
+	}
+
+}	
 close(align);
 close(lista);
 close(alin);
