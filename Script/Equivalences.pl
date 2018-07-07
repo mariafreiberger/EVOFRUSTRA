@@ -1,6 +1,7 @@
 use strict;
 
 open(align,"@ARGV[0]/OutPutFiles@ARGV[1]/Posiciones");
+my $pdb;
 
 while(my $align=<align>){
 	my $Sres;
@@ -14,8 +15,9 @@ while(my $align=<align>){
 		else{
 			open(salida,">@ARGV[0]/OutPutFiles@ARGV[1]/Equivalences/SalidaSRes@splitalign[1]@splitalign[2]@splitalign[3]@splitalign[4]_@splitalign[6].txt");
 			}
-		open(Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@splitalign[1]@splitalign[2]@splitalign[3]@splitalign[4]_@splitalign[6].pdb.done/FrustrationData/@splitalign[1]@splitalign[2]@splitalign[3]@splitalign[4]_@splitalign[6].pdb_singleresidue");
+		open(Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@splitalign[1]@splitalign[2]@splitalign[3]@splitalign[4]_@splitalign[6].pdb.done/FrustrationData/@splitalign[1]@splitalign[2]@splitalign[3]@splitalign[4].pdb_singleresidue");
 		$Sres=<Sres>;
+		$pdb="@splitalign[1]@splitalign[2]@splitalign[3]@splitalign[4]";
 			}
 	else{
 		my @splitalignes=split " ",$align;
