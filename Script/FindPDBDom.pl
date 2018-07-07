@@ -12,7 +12,7 @@ while(my $lineB=<blista>){
 	chomp $lineB;
 	my $miss=-1;
 	$lineB =~ tr/a-z/A-Z/;
-	system("awk 'match(\$2, /$lineB/)' @ARGV[0]/DBSeq.fasta > @ARGV[0]/OutPutFiles@ARGV[1]/Listaawk$c.txt");
+	system("awk 'match(\$2, /$lineB/)' @ARGV[0]/DBSeq.fasta > @ARGV[0]/OutPutFiles@ARGV[1]/Listaawk.txt");
 	open (awk,"@ARGV[0]/OutPutFiles@ARGV[1]/Listaawk.txt");
 	my $ali=<ali>;
 	$ali=<ali>;
