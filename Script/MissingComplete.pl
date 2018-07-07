@@ -37,51 +37,44 @@ while(my $alin=<align>){
 		open(busca,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdb.pdb");
 		while(my $busca=<busca>){
 			my @busca= split " ", $busca;
-			if($tc>2){
-				if((@busca[0] eq "REMARK")and(@busca[1]==465)and(@busca[3] eq $ch)and($comi<=@busca[4])){
-					@com[$count]=@busca[4];
-					$count++;
-					}
+			if((@busca[0] eq "REMARK")and(@busca[1]==465)and(@busca[3] eq $ch)){
+				@com[$count]=@busca[4];
+				$count++;
 				}
-			else{
-				if((@busca[0] eq "REMARK")and(@busca[1]==465)and(@busca[3] eq $ch)){
-					@com[$count]=@busca[4];
-					$count++;
-					}
-				}		
 			}
 			close(busca);
 		if($count==0){
 			copy("@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdbch.pdb_singleresidue","@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdb.pdb_singleresidue");}
 		else{
+			
 			open(sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdbch.pdb_singleresidue");
 			open(sressal,">@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdb.pdb_singleresidue");
-			my $cnt=0;
-			my @spl;
-			my $Sres=<sres>;
-			print sressal "$Sres";
-			while($Sres=<sres>){
-				@spl= split " ",$Sres;
-				if(@spl[0]>@com[$cnt]){
-					while((@spl[0]-1>=@com[$cnt])and($count>$cnt)){
-						print sressal "@com[$cnt] Missing Residue\n";
-						$cnt++;					
-							}
-					print sressal "$Sres";
-						}				
-				else{
-					print sressal "$Sres";
+				my $cnt=0;
+				my @spl;
+				my $Sres=<sres>;
+				print sressal "$Sres";
+				while($Sres=<sres>){
+					@spl= split " ",$Sres;
+					if(@spl[0]>@com[$cnt]){
+						while((@spl[0]-1>=@com[$cnt])and($count>$cnt)){
+							print sressal "@com[$cnt] Missing Residue\n";
+							$cnt++;					
+								}
+						print sressal "$Sres";
+							}				
+					else{
+						print sressal "$Sres";
+						}
 					}
-				}
-			if(@spl[0]<@com[$cnt]){
-					while($cnt<=$count-1){
-						print sressal "@com[$cnt] Missing Residue\n";
-						$cnt++;					
-							}
+				if(@spl[0]<@com[$cnt]){
+						while($cnt<=$count-1){
+							print sressal "@com[$cnt] Missing Residue\n";
+							$cnt++;					
+								}
+				}	
 			}
-		}
-	}
-close(sres);
+	}	
+close(sres);	
 close(sressal);
 }
 close(align);
