@@ -7,46 +7,55 @@ open(sali, ">@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign4.fasta");
 my $pdbid;
 my @sp;
 
-my $alignment="@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign2.fasta";
+open(align,"@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign2.fasta");
 
-my $secuencia = Bio::SeqIO -> new(
-	-format => "fasta",
-	-file => "$alignment");
-
-while (my $SEQ = $secuencia->next_seq()){
-	my $c=0;
-	my $SEC=$SEQ->seq();
-	my @splitter= split "",$SEC;
-	my @spname=split "_",$SEQ->display_id;
-	open(Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@spname[0]_@spname[1].pdb.done/FrustrationData/@spname[0].pdb_singleresidue");
-	print salida ">",$SEQ->display_id,"\n";
-	print sali ">",$SEQ->display_id,"\n";
-	my $Sres=<Sres>;
-	$Sres=<Sres>;
-	my $long=$SEQ->length;
-	my @splitres;
-	while($c<$long){
-		@splitres=split " ", $Sres;
-		if((@splitter[$c] eq "-") or (@splitter[$c] eq "X")){
-			print salida "-";
-			print sali "-";
-			}	
-		else{	
-			if(@splitres[1] eq "Missing"){
-				print salida "-";
-				print sali "Z";
-				$Sres=<Sres>;
-			}
-			else {
-				print sali "@splitres[3]";
-				print salida "@splitres[3]";
-				$Sres=<Sres>;
-				}
-			}
-		$c++;
+while (my $SEQ = <align>){
+	chomp $SEQ;
+	my @splitter= split "",$SEQ;
+	my $c;	
+	my @spname= split "_",$SEQ;
+	if(@splitter[0] eq ">"){
+		$c=@spname[2];
+		open(Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6].pdb.done/FrustrationData/@splitter[1]@splitter[2]@splitter[3]@splitter[4].pdb_singleresidue");
+		print salida "$SEQ\n";
+		print sali "$SEQ\n";
+		my $Sres=<Sres>;
 		}
-print sali "\n";
-print salida "\n";
+	else{
+		my $Sres=<Sres>;
+		my @splitres=split " ", $Sres;
+		my $long=@splitter;
+		my $i=@splitres[0];
+		while($i<$c){
+			$i++;
+			$Sres=<Sres>;
+			@splitres=split " ", $Sres;
+			}
+		$c=0;
+		while($c<$long){
+			@splitres=split " ", $Sres;
+			if((@splitter[$c] eq "-") or (@splitter[$c] eq "X")){
+				print salida "-";
+				print sali "-";
+				}	
+			else{	
+				if(@splitres[1] eq "Missing"){
+					print salida "-";
+					print sali "Z";
+					$Sres=<Sres>;
+				}
+				else {
+					print sali "@splitres[3]";
+					print salida "@splitres[3]";
+					$Sres=<Sres>;
+					}
+				}
+			$c++;
+			}
+	print sali "\n";
+	print salida "\n";
+	}
+
 }
 
 close(corregido);
