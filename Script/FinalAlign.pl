@@ -16,6 +16,7 @@ my $r=0;
 my $align;
 my @s;
 my $f=0;
+my $chq=0;
 
 while($align=<align>){
 	chomp $align;
@@ -65,12 +66,13 @@ while($align=<align>){
 		
 			}	
 			else {
-				if($r==1){
+				if(($r==1) and (@slista[2] ne "")){
 					$sres=<Sres>;
+					$chq=1;
 					@s=split " ",$sres;
 					$r=@s[0]+1;
 					if(@s[0]==@slista[2]){$r++;}
-					else{
+					else{	
 						while($r<@slista[2]-1){
 							$sres=<Sres>;
 							$r++;
@@ -83,8 +85,10 @@ while($align=<align>){
 				my $q=0;
 				while ($j<$tam){
 					if(@vector[$j]==0){
-						if(@splitter[$j] ne "-"){	
-							$sres=<Sres>;}
+						if(@splitter[$j] ne "-"){
+							if($chq==1){$chq=0;}	
+							else{$sres=<Sres>;}
+							}
 						}
 					else{
 						if(@splitter[$j]eq"Z"){
@@ -107,7 +111,8 @@ while($align=<align>){
 						else{	
 							if(@splitter[$j]eq"Z"){
 								print posi "Z ";
-								$sres=<Sres>;
+								if($chq==1){$chq=0;}	
+								else{$sres=<Sres>;}
 								}
 							else{	
 								@splres= split " ",$sres;
@@ -115,7 +120,8 @@ while($align=<align>){
 									$f=1;			
 									}
 								else{
-									$sres=<Sres>;
+									if($chq==1){$chq=0;}	
+									else{$sres=<Sres>;}
 									}
 								$r++;
 								@splres= split " ",$sres;
