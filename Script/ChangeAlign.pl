@@ -8,18 +8,20 @@ my $pdbid;
 my @sp;
 
 open(align,"@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign2.fasta");
+my $c;	
 
 while (my $SEQ = <align>){
 	chomp $SEQ;
 	my @splitter= split "",$SEQ;
-	my $c;	
 	my @spname= split "_",$SEQ;
+	my $Sres;
 	if(@splitter[0] eq ">"){
 		$c=@spname[2];
 		open(Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6].pdb.done/FrustrationData/@splitter[1]@splitter[2]@splitter[3]@splitter[4].pdb_singleresidue");
 		print salida "$SEQ\n";
 		print sali "$SEQ\n";
-		my $Sres=<Sres>;
+		print "\n$SEQ\n";
+		$Sres=<Sres>;
 		}
 	else{
 		my $Sres=<Sres>;
@@ -27,6 +29,7 @@ while (my $SEQ = <align>){
 		my $long=@splitter;
 		my $i=@splitres[0];
 		while($i<$c){
+			if($i==$c){last;}
 			$i++;
 			$Sres=<Sres>;
 			@splitres=split " ", $Sres;
@@ -43,10 +46,11 @@ while (my $SEQ = <align>){
 					print salida "-";
 					print sali "Z";
 					$Sres=<Sres>;
+					
 				}
 				else {
 					print sali "@splitres[3]";
-					print salida "@splitres[3]";
+					print salida "@splitter[$c]";
 					$Sres=<Sres>;
 					}
 				}
