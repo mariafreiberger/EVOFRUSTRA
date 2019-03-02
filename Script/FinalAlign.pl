@@ -55,7 +55,6 @@ while($align=<align>){
 					print nuevo ">@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]\n";
 					print nuevo2 ">@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]\n";	
 					print posi "$align\n";	
-					print "$align\n";
 					$m++;
 					
 					}
@@ -63,7 +62,6 @@ while($align=<align>){
 					print nuevo "\n>@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]\n";
 					print nuevo2 "\n>@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]\n";
 					print posi "\n$align\n";
-					print "\n$align\n";
 					}
 		
 			}	
@@ -76,7 +74,7 @@ while($align=<align>){
 					$r=@s[0]+1;
 					if(@s[0]==@slista[2]){$r++;}
 					else{	
-						while($r<@slista[2]-1){
+						while($r<@slista[2]){
 							$sres=<Sres>;
 							$r++;
 							}
