@@ -54,7 +54,8 @@ while($align=<align>){
 				if($m==0){
 					print nuevo ">@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]\n";
 					print nuevo2 ">@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]\n";	
-					print posi "$align\n";
+					print posi "$align\n";	
+					print "$align\n";
 					$m++;
 					
 					}
@@ -62,6 +63,7 @@ while($align=<align>){
 					print nuevo "\n>@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]\n";
 					print nuevo2 "\n>@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]\n";
 					print posi "\n$align\n";
+					print "\n$align\n";
 					}
 		
 			}	
@@ -69,6 +71,7 @@ while($align=<align>){
 				if(($r==1) and (@slista[2] ne "")){
 					$sres=<Sres>;
 					$chq=1;
+					print $sres;
 					@s=split " ",$sres;
 					$r=@s[0]+1;
 					if(@s[0]==@slista[2]){$r++;}
@@ -85,9 +88,8 @@ while($align=<align>){
 				my $q=0;
 				while ($j<$tam){
 					if(@vector[$j]==0){
-						if(@splitter[$j] ne "-"){
-							if($chq==1){$chq=0;}	
-							else{$sres=<Sres>;}
+						if(@splitter[$j] ne "-"){	
+							$sres=<Sres>;
 							}
 						}
 					else{
@@ -112,7 +114,8 @@ while($align=<align>){
 							if(@splitter[$j]eq"Z"){
 								print posi "Z ";
 								if($chq==1){$chq=0;}	
-								else{$sres=<Sres>;}
+								else{
+								$sres=<Sres>;}
 								}
 							else{	
 								@splres= split " ",$sres;
@@ -120,8 +123,7 @@ while($align=<align>){
 									$f=1;			
 									}
 								else{
-									if($chq==1){$chq=0;}	
-									else{$sres=<Sres>;}
+									$sres=<Sres>;
 									}
 								$r++;
 								@splres= split " ",$sres;
