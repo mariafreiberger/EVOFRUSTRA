@@ -17,7 +17,7 @@ while(my $lista=<lista>){
 				print salida "@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]_@spl[2]_@spl[3]\n";
 				print sal ">@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]_@spl[2]_@spl[3]\n";
 				$lista=<lista>;
-				print sal "$lista\n";
+				print sal "$lista";
 				last;
 			}
 		}
