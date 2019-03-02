@@ -4,7 +4,7 @@ N=read.delim("long.txt", stringsAsFactors=F, header=F)
 
 # limites frustracion single res
 lim_max=-1
-lim_min=0.58
+lim_min=0.55
 
 frust_index=as.numeric(tabla[,4])#4 en el mio
 
@@ -51,7 +51,7 @@ for (CharactPos in 1:N$V1)
   minimos_shannon=minimos*log2(minimos)
   maximos_shannon=maximos*log2(maximos)
   neutros_shannon=neutros*log2(neutros)
-
+  
   #si no hay ningun residuo con ese estado de frustra, la entropia de ese estado es cero
   minimos_shannon[which(minimos==0)]=0
   maximos_shannon[which(maximos==0)]=0
@@ -61,9 +61,9 @@ for (CharactPos in 1:N$V1)
   h_shannon= -(0.4*log2(0.4)+0.1*log2(0.1)+0.5*log2(0.5)) -shannon
   h_shannon_corregida= h_shannon - correccion
   
-#   h_shannon= -(0.4*log2(0.4)+0.1*log2(0.1)+0.5*log2(0.5)) -shannon-((3-1)/(2*log(2)*total))
+  #   h_shannon= -(0.4*log2(0.4)+0.1*log2(0.1)+0.5*log2(0.5)) -shannon-((3-1)/(2*log(2)*total))
   
-#   h_shannon=log2(3)-shannon-((3-1)/(2*log(2)*total))
+  #   h_shannon=log2(3)-shannon-((3-1)/(2*log(2)*total))
   
   
   h_minimos=minimos*h_shannon_corregida
@@ -83,7 +83,7 @@ for (CharactPos in 1:N$V1)
   
   wtf=CharactPos
   cat(wtf, "\t", minimos, "\t" , neutros,"\t",maximos,"\t",minimos_t,"\t",neutros_t,"\t",maximos_t,"\t",h_minimos,"\t",h_neutros,"\t",h_maximos,"\t",h_shannon_corregida,"\t",estado,"\n")
-
+  
 }
 
 
