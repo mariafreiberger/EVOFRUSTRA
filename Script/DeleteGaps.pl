@@ -2,14 +2,14 @@ use strict;
 
 open(nuevo,">@ARGV[0]/OutPutFiles@ARGV[1]/AlignClean.fasta"); #salida
 
-
-my @vector;
 my $c=0;
+my @vector;
 open(seq,"@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign.fasta");
 
 while (my $SEQ=<seq>){
 	my @sp=split "",$SEQ;
-	if(@sp[0] eq ">"){}
+	if(@sp[0] eq ">"){
+		}
 	else{
 		@vector[$c]=$SEQ;
 		$c++;		
