@@ -73,7 +73,7 @@ while($align=<align>){
 					$r=@s[0]+1;
 					if(@s[0]==@slista[2]){$r++;}
 					else{	
-						while($r<@slista[2]){
+						while($r<@slista[2]-1){
 							$sres=<Sres>;
 							$r++;
 							}
@@ -110,7 +110,13 @@ while($align=<align>){
 						else{	
 							if(@splitter[$j]eq"Z"){
 								print posi "Z ";
-								$sres=<Sres>;
+								@splres= split " ",$sres;
+								if((@splres[0] == @s[0]) and ($f==0)){
+									$f=1;			
+									}
+								else{
+									$sres=<Sres>;
+									}
 								}
 							else{	
 								@splres= split " ",$sres;
