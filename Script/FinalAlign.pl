@@ -66,6 +66,7 @@ while($align=<align>){
 		
 			}	
 			else {
+				if(@slista[2] eq ""){$sres=<Sres>;}
 				if(($r==1) and (@slista[2] ne "")){
 					$sres=<Sres>;
 					$chq=1;
@@ -91,8 +92,8 @@ while($align=<align>){
 							if((@splres[0] == @s[0]) and ($f==0)){
 									$f=1;			
 									}
-								else{
-									$sres=<Sres>;
+							else{
+								$sres=<Sres>;
 									}
 							}
 						}
