@@ -29,36 +29,7 @@ while(my $pdb=<pdb>){
 		}
 	if(@splitter[0]eq "ATOM"){
 		if(@spl[21] eq @ARGV[1]){	
-			if(@splitter[4] eq @ARGV[1]){
-				$com=@splitter[5];
-				}	
-			else{
-				if(@splitter[4]=~/A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z/g){
-				$com=$';
-					}
-				}
-			}
-		if((@ARGV[4]<0)and($com<@ARGV[4])){
-			if(@splitter[4] eq @ARGV[1]){
 				print guarda "$pdb\n";
-				}
-			else {
-				if(@spl[21] eq @ARGV[1]){
-					print guarda "$pdb\n";
-					}
-				}
-			}
-		if($com<@ARGV[4]){}
-		else {	
-			if(@splitter[4] eq @ARGV[1]){
-				print guarda "$pdb\n";
-
-				}
-			else {
-				if(@spl[21] eq @ARGV[1]){
-					print guarda "$pdb\n";
-					}
-				}
 			}
 		}
 	else {
