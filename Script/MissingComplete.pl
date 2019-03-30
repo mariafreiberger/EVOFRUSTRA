@@ -7,12 +7,14 @@ open(sal,">@ARGV[0]/OutPutFiles@ARGV[1]/ListaPDBC.txt");
 my %hash = ("CYS" => "C", "ASP"=>"D", "SER"=>"S"
 ,"GLN"=>"Q","LYS"=>"K","ILE"=>"I","PRO"=>"P",
 "THR"=>"T","PHE"=>"F","ASN"=>"N","GLY"=>"G","HIS"=>"H","LEU"=>"L","ARG"=>"R",
-"TRP"=>"W","ALA"=>"A","VAL"=>"V","GLU"=>"E","TYR"=>"Y","MET"=>"M");
+"TRP"=>"W","ALA"=>"A","VAL"=>"V","GLU"=>"E","TYR"=>"Y","MET"=>"M","MSE"=>"B");
 
 my $pdb;
 my $ch;
 my $pdbch;
 my @com;
+my @iden;
+my @chain;
 my $count=0;
 my $comi;
 
@@ -39,12 +41,14 @@ while(my $alin=<align>){
 			my @busca= split " ", $busca;
 			if((@busca[0] eq "REMARK")and(@busca[1]==465)and(@busca[3] eq $ch)){
 				@com[$count]=@busca[4];
+				@chain[$count]=@busca[3];
+				@iden[$count]=$hash{@busca[2]};
 				$count++;
 				}
 			}
 			close(busca);
 		if($count==0){
-			copy("@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdbch.pdb_singleresidue","@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdb.pdb_singleresidue");}
+			system("cp @ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdbch.pdb_singleresidue @ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdb.pdb_singleresidue");}
 		else{
 			
 			open(sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/$pdbch.pdb.done/FrustrationData/$pdbch.pdb_singleresidue");
@@ -57,7 +61,7 @@ while(my $alin=<align>){
 					@spl= split " ",$Sres;
 					if(@spl[0]>@com[$cnt]){
 						while((@spl[0]-1>=@com[$cnt])and($count>$cnt)){
-							print sressal "@com[$cnt] Missing Residue\n";
+							print sressal "@com[$cnt] @chain[$cnt] 0.000 @iden[$cnt] Missing Residue\n";
 							$cnt++;					
 								}
 						print sressal "$Sres";
@@ -68,7 +72,7 @@ while(my $alin=<align>){
 					}
 				if(@spl[0]<@com[$cnt]){
 						while($cnt<=$count-1){
-							print sressal "@com[$cnt] Missing Residue\n";
+							print sressal "@com[$cnt] @chain[$cnt] 0.000 @iden[$cnt] Missing Residue\n";
 							$cnt++;					
 								}
 				}	
