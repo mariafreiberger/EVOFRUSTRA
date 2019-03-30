@@ -17,19 +17,26 @@ while(my $lista=<lista>){
 			$c++;
 			my @spfrus= split " ",$frustra;
 			my $tam=@spfrus;
-			if(($c>4)and($tam==8)){
-				print salida "@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]_@spl[2]_@spl[3]\n";
-				print sal ">@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]_@spl[2]_@spl[3]\n";
-				$lista=<lista>;
-				print sal "$lista";
+			$c++;
+			if($tam<8){
+				$error=0
+				}
+			else{
+				if($c>4){
 				$error=1;
-				last;
+				}
 			}
 		}
 	}
 	if($error==0){
 		$lista=<lista>;
 		print error "@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]\n";
+		}
+	else{
+		print salida "@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]_@spl[2]_@spl[3]\n";
+		print sal ">@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]_@spl[2]_@spl[3]\n";
+		$lista=<lista>;
+		print sal "$lista";
 		}
 	close(frustra);
 }
