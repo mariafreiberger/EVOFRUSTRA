@@ -4,7 +4,7 @@ open(nuevo,">@ARGV[0]/OutPutFiles@ARGV[1]/AlignClean.fasta"); #salida
 
 my $c=0;
 my @vector;
-open(seq,"@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign.fasta");
+open(seq,"@ARGV[0]/OutPutFiles@ARGV[1]/AlignSE.fasta");
 
 while (my $SEQ=<seq>){
 	my @sp=split "",$SEQ;
@@ -45,8 +45,8 @@ while($i<$tam){
 
 $tam=@vect_gaps;
 my $c=0;
-
-open(seq,"@ARGV[0]/OutPutFiles@ARGV[1]/SeqAlign.fasta");
+close(seq);
+open(seq,"@ARGV[0]/OutPutFiles@ARGV[1]/AlignSE.fasta");
 
 while (my $SEQ2 = <seq>){
 	$i=0;
@@ -71,5 +71,5 @@ while (my $SEQ2 = <seq>){
 			}	
 		}
 }
-
+close(seq);
 close(nuevo);
