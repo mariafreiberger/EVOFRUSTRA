@@ -1,12 +1,14 @@
 use strict;
-use File::Copy;
 
 my $fastafile=$ARGV[1];
 my $jobID=$ARGV[0];
 my $jobsDir=qx(pwd);
 chomp $jobsDir;
 
-print "Considers Missing Residues (Y/N): ";
+system("rm -r $jobsDir/OutPutFiles$jobID");
+system("rm -r $jobsDir/OutPut$jobID");
+
+print "Considers Missing Residues (Y/N): "; #Sequence, are from UniProt(Y) o PDB(N)?
 my $missa = <STDIN>;
 chomp $missa;
 $missa=uc($missa);
@@ -23,24 +25,29 @@ else{
 	}
 }
 
+#--- Make directories----
 
-mkdir "$jobsDir/OutPutFiles$jobID";
-mkdir "$jobsDir/OutPutFiles$jobID/Modeller";
-mkdir "$jobsDir/OutPutFiles$jobID/Equivalences";
-mkdir "$jobsDir/OutPut$jobID";
-mkdir "$jobsDir/OutPut$jobID/PDB";
-mkdir "$jobsDir/OutPut$jobID/VisualizationScript";
+system("mkdir $jobsDir/OutPutFiles$jobID"); 
+system("mkdir $jobsDir/OutPutFiles$jobID/Modeller");
+system("mkdir $jobsDir/OutPutFiles$jobID/Equivalences");
+system("mkdir $jobsDir/OutPut$jobID");
+system("mkdir $jobsDir/OutPut$jobID/PDB");
+system("mkdir $jobsDir/OutPut$jobID/VisualizationScript");
 
-copy("$jobsDir/Script/Generator.R","$jobsDir/OutPutFiles$jobID/Equivalences/Generator.R");
-copy("$jobsDir/Script/SeqLogo.R","$jobsDir/OutPutFiles$jobID/Equivalences/SeqLogo.R");
-copy("$jobsDir/Script/Logo.R","$jobsDir/OutPutFiles$jobID/Equivalences/Logo.R");
+#--- Copy files ---
+
+system("cp $jobsDir/Script/Generator.R $jobsDir/OutPutFiles$jobID/Equivalences/Generator.R");
+system("cp $jobsDir/Script/SeqLogo.R $jobsDir/OutPutFiles$jobID/Equivalences/SeqLogo.R");
+system("cp $jobsDir/Script/Logo.R $jobsDir/OutPutFiles$jobID/Equivalences/Logo.R");
 
 my $c=0;
 my $n=0;
 
-open(salidafasta,">$jobsDir/OutPutFiles$jobID/Sequences.fasta");
-open(sfasta,"$jobsDir/$fastafile");
-open(alin,">$jobsDir/OutPutFiles$jobID/Alignment.fasta");
+#--- Changing Alignment --- 
+
+open(salidafasta,">$jobsDir/OutPutFiles$jobID/Sequences.fasta"); # Sequences without gaps 
+open(sfasta,"$jobsDir/$fastafile"); # Input Alignment 
+open(alin,">$jobsDir/OutPutFiles$jobID/Alignment.fasta"); # Alignment without \n
 my $co=0;
 
 while (my $sfasta=<sfasta>){
@@ -76,39 +83,31 @@ close(align);
 close(lista);
 close(alin);
 
-copy ("$jobsDir/OutPutFiles$jobID/Alignment.fasta",">$jobsDir/OutPutFiles$jobID/AlignmentBis.fasta");
-
 my $tamanio=@ARGV;
 
-#----Frustra----
 
-if($tamanio<3){
-	print "Is it a protein domain? (Y/N): ";
-	my $Dom = <STDIN>;
-	chomp $Dom;
-	$Dom=uc($Dom);
-	my $d=1;
-	while($d){
-		if(($Dom eq "Y")or($Dom eq "N")){
-			$d=0;
+if($tamanio<3){ 
+		system("perl $jobsDir/Script/FindPDB.pl $jobsDir $jobID"); #Find the pdbid (in case you are running without a list like input)
+	} 
+else{
+	open(listapdb,"$jobsDir/@ARGV[2]"); #Passing all in lower case, expect chain.
+	open(salpdb,">$jobsDir/OutPutFiles$jobID/ListaPDB.txt");
+	while(my $listapdb=<listapdb>){
+		chomp $listapdb;
+		my @splitm=split "_",$listapdb;
+		@splitm[0]=lc(@splitm[0]);
+		my @spos=split "-", @splitm[2];
+		my $ta=@splitm;
+		if($ta>2){
+			print salpdb "@splitm[0]_@splitm[1]_@splitm[2]_@splitm[3]\n";
 			}
 		else{
-			print "Is it a protein domain? (Y/N), please select a correct option: ";
-			$Dom = <STDIN>;
-			chomp $Dom;
-			$Dom=uc($Dom);
-			}
+			print salpdb "@splitm[0]_@splitm[1]\n";
 		}
-	if($Dom eq "Y"){
-		system("perl $jobsDir/Script/FindPDBDom.pl $jobsDir $jobID")
-		}
-	else{
-		system("perl $jobsDir/Script/FindPDB.pl $jobsDir $jobID");
-		}	
 	}
-else{
-	copy("$jobsDir/@ARGV[2]","$jobsDir/OutPutFiles$jobID/ListaPDB.txt");
 }
+
+#--- Run Frustration --- 
 
 system("perl $jobsDir/Script/FrustraPDB.pl $jobsDir $jobID $missa");
 
@@ -118,12 +117,11 @@ system("perl $jobsDir/Script/FrustraPDB.pl $jobsDir $jobID $missa");
 system ("perl $jobsDir/Script/FinalAlign.pl $jobsDir $jobID");
 system ("perl $jobsDir/Script/Equivalences.pl $jobsDir $jobID");
 
-sleep(10);
 
-#--LLamar a todos los .R---
+#-- Call all .R scripts---
 
 system("perl $jobsDir/Script/FastaMod.pl $jobsDir $jobID");
-copy ("$jobsDir/OutPutFiles$jobID/long.txt","$jobsDir/OutPutFiles$jobID/Equivalences/long.txt");
+system("cp $jobsDir/OutPutFiles$jobID/long.txt $jobsDir/OutPutFiles$jobID/Equivalences/long.txt");
 system("cd $jobsDir/OutPutFiles$jobID/Equivalences; cat *SalidaSRes* > AllSalidaSResB.txt");
 system("perl $jobsDir/Script/LogoCheck.pl $jobsDir $jobID");
 system("cd $jobsDir/OutPutFiles$jobID/Equivalences; Rscript Logo.R");
@@ -131,15 +129,15 @@ system("cd $jobsDir/OutPutFiles$jobID/Equivalences; Rscript Generator.R");
 system("cd $jobsDir/OutPutFiles$jobID/Equivalences; Rscript SeqLogo.R");
 system("perl $jobsDir/Script/VScript.pl $jobsDir $jobID");
 
-copy ("$jobsDir/OutPutFiles$jobID/Equivalences/HistogramFrustration.svg","$jobsDir/OutPut$jobID/HistogramFrustration.svg");
+system("cp $jobsDir/OutPutFiles$jobID/Equivalences/HistogramFrustration.svg $jobsDir/OutPut$jobID/HistogramFrustration.svg");
 
-copy("$jobsDir/OutPutFiles$jobID/SalidaAlign.fasta","$jobsDir/OutPut$jobID/SalidaAlign.fasta"); #para el skyling
-copy("$jobsDir/OutPutFiles$jobID/SinPDB.txt","$jobsDir/OutPut$jobID/SinPDB.txt");
-copy("$jobsDir/OutPutFiles$jobID/ListaPDBC.txt","$jobsDir/OutPut$jobID/ListaPDB.txt");
-copy("$jobsDir/OutPutFiles$jobID/Equivalences/CharactPosDataN","$jobsDir/OutPut$jobID/CharactPosDataN");
-copy("$jobsDir/OutPutFiles$jobID/Equivalences/IC.csv","$jobsDir/OutPut$jobID/IC.csv");
-copy("$jobsDir/OutPutFiles$jobID/familias.hmm","$jobsDir/OutPut$jobID/familias.hmm");
-copy("$jobsDir/OutPutFiles$jobID/Equivalences/seqlogo.png","$jobsDir/OutPut$jobID/seqlogo.png");
+system("cp $jobsDir/OutPutFiles$jobID/SalidaAlign.fasta $jobsDir/OutPut$jobID/SalidaAlign.fasta"); 
+system("cp $jobsDir/OutPutFiles$jobID/SinPDB.txt $jobsDir/OutPut$jobID/SinPDB.txt");
+system("cp $jobsDir/OutPutFiles$jobID/ListaPDBC.txt $jobsDir/OutPut$jobID/ListaPDB.txt");
+system("cp $jobsDir/OutPutFiles$jobID/Equivalences/CharactPosDataN $jobsDir/OutPut$jobID/CharactPosDataN");
+system("cp $jobsDir/OutPutFiles$jobID/Equivalences/IC.csv $jobsDir/OutPut$jobID/IC.csv");
+system("cp $jobsDir/OutPutFiles$jobID/familias.hmm $jobsDir/OutPut$jobID/familias.hmm");
+system("cp $jobsDir/OutPutFiles$jobID/Equivalences/seqlogo.png $jobsDir/OutPut$jobID/seqlogo.png");
 
 system("cd $jobsDir; tar -zcvf OutPut$jobID.tar.gz OutPut$jobID");
 
