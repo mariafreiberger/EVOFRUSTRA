@@ -31,24 +31,25 @@ while($align=<align>){
 			$tam = @splitter;
 			$control++;
 				}
-		if($c==1)
-		{	$c++;
+		if($c==1){
+			$c++;
 			my $i=0;
 			while($i<$tam){
 				if((@splitter[$i]eq"-") or (@splitter[$i]eq"Z")){
-					@vector[$i]=0;
+					@vector[$i]=0; #Delete the column
 					}
 				else{
-					@vector[$i]=1;
+					@vector[$i]=1; # Don't delete de column
 					}
 				$i++;
 				}
 			}
 		else{
+			#Create other file without the delete columns
 			if(@splitter[0]eq">"){
-				open(Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6].pdb.done/FrustrationData/@splitter[1]@splitter[2]@splitter[3]@splitter[4].pdb_singleresidue");
+				open(Sres,"@ARGV[0]/OutPutFiles@ARGV[1]/Modeller/@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6].pdb.done/FrustrationData/@splitter[1]@splitter[2]@splitter[3]@splitter[4].pdb_singleresidue"); #open frustration file
 				$f=0;
-				$sres=<Sres>;
+				$sres=<Sres>;#Read the header
 				@slista=split "_",$align;
 				$r=1;
 				if($m==0){
@@ -61,23 +62,26 @@ while($align=<align>){
 				else{
 					print nuevo "\n>@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]\n";
 					print nuevo2 "\n>@splitter[1]@splitter[2]@splitter[3]@splitter[4]_@splitter[6]\n";
-					print posi "\n$align\n";
+					print posi "\n$align\n";	
 					}
 		
-			}	
+				}	
 			else {
-				if(@slista[2] eq ""){$sres=<Sres>;}
+				if(@slista[2] eq ""){$sres=<Sres>;}#Read the First residue
 				if(($r==1) and (@slista[2] ne "")){
-					$sres=<Sres>;
+					$sres=<Sres>;#Read the First residue
 					$chq=1;
 					@s=split " ",$sres;
 					$r=@s[0];
-					if(@s[0]==@slista[2]){$r++;
+					if(@s[0]==@slista[2]){
+						$r++;
 						}
 					else{	
 						while($r<@slista[2]-1){
 							$sres=<Sres>;
-							$r++;
+							@s=split " ",$sres;
+							$r=@s[0];
+							$chq=2;
 							}
 						}
 					}	
@@ -88,23 +92,21 @@ while($align=<align>){
 				while ($j<$tam){
 					if(@vector[$j]==0){
 						if(@splitter[$j] ne "-"){
-							@splres= split " ",$sres;	
-							if((@splres[0] == @s[0]) and ($f==0)){
-									$f=1;			
-									}
+							@splres= split " ",$sres;
+							if($chq==1){$chq=2;}
 							else{
-								$sres=<Sres>;
-									}
+							$sres=<Sres>;
+								}
 							}
 						}
 					else{
-						if(@splitter[$j]eq"Z"){
+						if(@splitter[$j]eq"Z"){# if a residue in alignment is a missing residue in pdb write a -
 							print nuevo "-";
 							$n++; $q++;
 							print nuevo2 "-";
 							}
 						else{
-							print nuevo "@splitter[$j]";
+							print nuevo "@splitter[$j]";# Other letter write the letter
 							$n++; $q++;
 							print nuevo2 "@splitter[$j]";
 							}
@@ -117,10 +119,10 @@ while($align=<align>){
 							}
 						else{	
 							if(@splitter[$j]eq"Z"){
-								print posi "Z ";
+								print posi "Z ";# if a residue in alignment is a missing residue in pdb read a line in frustration file
 								@splres= split " ",$sres;
-								if((@splres[0] == @s[0]) and ($f==0)){
-									$f=1;			
+								if((@splres[0] == @s[0]) and ($chq==1)){
+									$chq=2;			
 									}
 								else{
 									$sres=<Sres>;
@@ -128,8 +130,8 @@ while($align=<align>){
 								}
 							else{	
 								@splres= split " ",$sres;
-								if((@splres[0] == @s[0]) and ($f==0)){
-									$f=1;			
+								if((@splres[0] == @s[0]) and ($chq==1)){
+									$chq=2;			
 									}
 								else{
 									$sres=<Sres>;
@@ -147,8 +149,7 @@ while($align=<align>){
 					}
 				}
 			}
-		}
-
+	}
 }
 
 system ("perl @ARGV[0]/Script/longalign.pl @ARGV[0] @ARGV[1]");
